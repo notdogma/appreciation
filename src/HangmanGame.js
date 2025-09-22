@@ -65,7 +65,7 @@ const HangmanGame = () => {
       const key = e.key.toUpperCase();
       
       // Check if the key is a letter, number, or allowed symbol
-      if (/^[A-Z0-9!., -]$/i.test(key)) {
+      if (/^[A-Z0-9!.,' -]$/i.test(key)) {
         handleGuess(key);
       }
     };
@@ -240,14 +240,6 @@ const HangmanGame = () => {
             Space
           </button>
           <button
-            key="exclamation"
-            onClick={() => handleGuess( '!' )}
-            disabled={loading || guessedLetters.includes( '!' ) || gameStatus !== 'in_progress'}
-            className={`keyboard-key ${guessedLetters.includes( '!' ) ? 'guessed' : ''} ${guessedLetters.includes( '!' ) && phrase && !phrase.includes( '!' ) ? 'wrong' : ''}`}
-          >
-            !
-          </button>
-          <button
             key="comma"
             onClick={() => handleGuess( ',' )}
             disabled={loading || guessedLetters.includes( ',' ) || gameStatus !== 'in_progress'}
@@ -263,6 +255,17 @@ const HangmanGame = () => {
           >
             .
           </button>
+        </div>
+
+        <div className="keyboard-row">
+          <button
+            key="exclamation"
+            onClick={() => handleGuess( '!' )}
+            disabled={loading || guessedLetters.includes( '!' ) || gameStatus !== 'in_progress'}
+            className={`keyboard-key ${guessedLetters.includes( '!' ) ? 'guessed' : ''} ${guessedLetters.includes( '!' ) && phrase && !phrase.includes( '!' ) ? 'wrong' : ''}`}
+          >
+            !
+          </button>
           <button
             key="dash"
             onClick={() => handleGuess( '-' )}
@@ -270,6 +273,14 @@ const HangmanGame = () => {
             className={`keyboard-key ${guessedLetters.includes( '-' ) ? 'guessed' : ''} ${guessedLetters.includes( '-' ) && phrase && !phrase.includes( '-' ) ? 'wrong' : ''}`}
           >
             -
+          </button>
+          <button
+            key="apostrophe"
+            onClick={() => handleGuess( "'" )}
+            disabled={loading || guessedLetters.includes( "'" ) || gameStatus !== 'in_progress'}
+            className={`keyboard-key ${guessedLetters.includes( "'" ) ? 'guessed' : ''} ${guessedLetters.includes( "'" ) && phrase && !phrase.includes( "'" ) ? 'wrong' : ''}`}
+          >
+            '
           </button>
         </div>
       </div>
