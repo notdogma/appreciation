@@ -21,6 +21,64 @@ const HangmanGame = () => {
 
   console.log( 'Game created with ID:', urlGameId )
 
+  // Handle player guesses
+  const handleGuess = async ( letter ) => {
+    if ( gameStatus !== 'in_progress' || guessedLetters.includes( letter ) || !urlGameId ) {
+      return;
+    }
+
+    try {
+      setLoading( true );
+      const response = await fetch( `${API_BASE_URL}/games/${urlGameId}/guesses`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify( { letter } ),
+      } );
+
+      if ( !response.ok ) {
+        const errorData = await response.json();
+        if ( errorData.error === 'Letter already guessed' ) {
+          return; // Ignore duplicate guesses
+        }
+        throw new Error( errorData.error || 'Failed to make a guess' );
+      }
+
+      const data = await response.json();
+      updateGameState( data );
+    } catch ( err ) {
+      console.error( 'Error making guess:', err );
+      setError( err.message || 'Failed to make a guess. Please try again.' );
+    } finally {
+      setLoading( false );
+    }
+  };
+
+  // Handle keyboard input
+  useEffect( () => {
+    const handleKeyDown = ( e ) => {
+      // Only process if game is in progress
+      if ( gameStatus !== 'in_progress' ) return;
+      if (gameStatus !== 'in_progress') return;
+      
+      const key = e.key.toUpperCase();
+      
+      // Check if the key is a letter, number, or allowed symbol
+      if (/^[A-Z0-9!., -]$/i.test(key)) {
+        handleGuess(key);
+      }
+    };
+
+    // Add event listener
+    window.addEventListener('keydown', handleKeyDown);
+    
+    // Clean up
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [handleGuess, gameStatus]);
+
   // Initialize the game with the provided game ID
   const initializeGame = useCallback( async () => {
     if( !urlGameId ) {
@@ -65,40 +123,6 @@ const HangmanGame = () => {
     if( gameData.status !== 'in_progress' ) {
       console.log( 'gameData: ', gameData );
       setWord( gameData.phrase || '' );
-    }
-  };
-
-  // Make a guess
-  const handleGuess = async ( letter ) => {
-    if( gameStatus !== 'in_progress' || guessedLetters.includes( letter ) || !urlGameId ) {
-      return;
-    }
-
-    try {
-      setLoading( true );
-      const response = await fetch( `${API_BASE_URL}/games/${urlGameId}/guesses`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify( { letter } ),
-      } );
-
-      if( !response.ok ) {
-        const errorData = await response.json();
-        if( errorData.error === 'Letter already guessed' ) {
-          return; // Ignore duplicate guesses
-        }
-        throw new Error( errorData.error || 'Failed to make a guess' );
-      }
-
-      const data = await response.json();
-      updateGameState( data );
-    } catch( err ) {
-      console.error( 'Error making guess:', err );
-      setError( err.message || 'Failed to make a guess. Please try again.' );
-    } finally {
-      setLoading( false );
     }
   };
 
