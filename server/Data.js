@@ -235,4 +235,12 @@ games.set( 'bdaf5da1-0e0b-4ba4-8021-77032af2c0a4', {
   playerName: "Ketan"
 } );
 
+games.set( '36444aee-0fbd-4730-8634-d4fc717502ce', {
+  phrase: formatPhrase('Seema, your attention to detail and clear communication ensure that nothing is overlooked and everyone stays aligned. Paired with your adaptability and strong work ethic, you consistently set the standard for excellence and reliability.'),
+  guessedLetters: [],
+  mistakes: 0,
+  status: 'in_progress',
+  playerName: "Seema"
+} );
+
 module.exports = games;
